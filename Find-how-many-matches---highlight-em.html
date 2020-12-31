@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Hi Hello World! Hello Hello World!</h1>
+
+<script>
+function matches() {
+  var JS, JSX, HTML;
+  
+  JS = [
+    `
+    var x, matches, target;
+    
+    x = this.textContent;    
+    [...this.parentElement.children].forEach(v => {
+      if(v.textContent == x) {
+        v.style.cssText += 'background-color: yellow';
+      } else {
+        v.style.cssText += 'background-color: white';
+      }
+    });
+    
+    matches = this.parentElement.textContent
+                  .match(eval('/'+x+'/g')).length;
+    if(matches == 1) { matches += ' match was'; }
+    else { matches += ' matches were'; }
+    
+    target = this.parentElement.parentElement;    
+    if(target.textContent.includes('match was found!') || 
+       target.textContent.includes('matches were found!') ) {
+      [...target.children].filter(v => {
+        if(v.textContent.includes('match was found!') ||  
+           v.textContent.includes('matches were found!') ) {
+          v.outerHTML = \`
+          <h4>\${matches} found!</h4>
+          \`;
+        } 
+      });       
+    } else {
+      target.innerHTML += \`
+      <h4>\${matches} found!</h4>
+      \`;
+    }
+    `
+  ];
+  
+  JSX = document.body;  
+  HTML = [...JSX.children]
+         .slice(0, [...JSX.children].length-1)
+         .map(v => v.innerHTML = `<${v.tagName}>` +
+                   v.innerHTML
+                    .split(' ')
+                    .map(v => v.innerHTML = 
+                    `<span ondblclick="${JS[0]}">${v}</span>`)
+                    .join(' ') + `</${v.tagName}>`
+         );
+  
+  JSX.innerHTML = HTML;
+} matches();
+</script>
+
+</body>
+</html>
+
